@@ -1,4 +1,3 @@
-#include <tp4_abr.h>
 /* <--------------- Définition fonctions utiles  ---------------> */
 
 void afficher_infos_choix_menu(int choix_menu, const char* CHOIX_MENU_TEXTE[]) {
@@ -90,6 +89,60 @@ int intervalle_chevauche(T_Noeud *noeud, T_Arbre *ABR) {
     // Sinon, les intervalles ne se chevauchent pas
     return 0;
 }
+
+int nombre_de_fils(T_Noeud *noeud) {
+    if (!(noeud->fils_droit) && !(noeud->fils_gauche)) {
+        return 2;
+    }
+    else if (noeud->fils_droit || noeud->fils_gauche) {
+        return 1;
+    }
+    else return 0;   
+}
+
+T_Noeud* plus_proche_successeur(T_Arbre ABR) {
+    // Renvoie l'intervalle min de l'arbre (sous-arbre droit)
+    T_Noeud *pnt = ABR;
+    T_Noeud *tmp;
+    while (!pnt) {
+        tmp = pnt;
+        pnt = pnt->fils_gauche;
+    };
+    return tmp;
+}
+T_Noeud* plus_proche_predecesseur(T_Arbre ABR) {
+    // Renvoie l'intervalle max de l'arbre (sous-arbre gauche)
+    T_Noeud *pnt = ABR;
+    T_Noeud *tmp;
+    while (!pnt) {
+        tmp = pnt;
+        pnt = pnt->fils_droit;
+    };
+    return tmp;
+}
+
+T_Noeud* recherche_pere(T_Arbre ABR, T_Inter intervalle, int id_entreprise) {
+// Renvoie un pointeur vers le noeud père du noeud cherché, sinon NULL
+// Ne pas modifier ABR
+
+    T_Noeud *pnt = ABR;
+    T_Noeud *noeud_pere;
+    while(!pnt) {
+        if (cle(intervalle) == cle(pnt->intervalle) && intervalle.borne_sup == droite_intervalle(pnt) && id_entreprise == pnt->id_entreprise) {
+            // Si les bornes sont identiques, et l'id identique
+            // => Bonne réservation    
+            return noeud_pere;
+        }
+        else {
+            noeud_pere = pnt;
+            // On passage au noeud suivant de façon logique
+            parcours(intervalle, pnt);
+        }   
+    }
+    printf("Aucun noeud n'a été trouvé.");
+    return NULL;
+}
+
 /* <--------------- Définition fonctions principales  ---------------> */
 
 T_Noeud* creer_noeud(int id_entreprise, T_Inter intervalle) {
@@ -120,13 +173,13 @@ void ajouter_noeud(T_Arbre* ABR, T_Noeud* noeud) {
     // S'ils ne se chevauchent pas, on l'ajoute à l'ABR
     else {
         // Variable de Stockage
-        T_Noeud *pred = malloc(sizeof(T_Noeud));    
+        T_Noeud *tmp;    
 
         // On parcourt l'arbre si aucune incompatibilité n'apparaît
         // On s'arrête lorsqu'on arrive à une feuille
         while (!pnt) {
             // On sauvegarde le prédecesseur
-            pred = pnt;
+            tmp = pnt;
             
             // On passe au noeud suivant
             parcours(noeud->intervalle, pnt);
@@ -134,12 +187,12 @@ void ajouter_noeud(T_Arbre* ABR, T_Noeud* noeud) {
 
         // On ajoute le noeud après avoir vérifié où il doit se placer dans l'ABR
         // L'intervalle est "plus petit"/à gauche
-        if (cle(pred->intervalle) < cle(noeud->intervalle)) {
-            pred->fils_gauche = noeud;
+        if (cle(tmp->intervalle) < cle(noeud->intervalle)) {
+            tmp->fils_gauche = noeud;
         }
         // L'intervalle est "plus grand"/à droite
-        if (cle(pred->intervalle) > cle(noeud->intervalle)) {
-            pred->fils_droit = noeud;
+        if (cle(tmp->intervalle) > cle(noeud->intervalle)) {
+            tmp->fils_droit = noeud;
         }
     }
 }
@@ -170,17 +223,118 @@ void suppr_noeud(T_Arbre *ABR, T_Inter intervalle, int id_entreprise) {
 // Suppression d'un noeud à un fils : On remplace le noeud par son fils
 // Supression d'un noeud à deux fils : On remplace le noeud par le MAX du sous-arbre gauche OU sous-arbre droit.
 // Pour ne pas déséquilbirer, on peut utiliser rand, pour soit choisir à gauche, soit à droite.
-// Il faut écrire la fonction max_intervalle(T_Arbre ABR) qui renvoie l'intervalle le plus grand d'un sous arbre.
+// Il faut écrire la fonction intervalle_extremum(T_Arbre ABR) qui renvoie l'intervalle le plus grand d'un sous arbre.
 
+    // On initialise un pointeur sur le noeud à supprimer et son père
+    T_Noeud *noeud_pere = recherche_pere(ABR, intervalle, id_entreprise);
+    T_Noeud *noeud_a_supprimer = recherche(ABR, intervalle, id_entreprise);
+    T_Noeud *predecesseur, *successeur;
 
+    // On compte son nombre de fils
+    int nombre_fils = nombre_de_fils(noeud_a_supprimer);
+
+    switch (nombre_fils) {
+        case 0:
+            // S'il n'a pas de fils, on le supprime.
+
+            // Il faut savoir s'il est le fils droit ou gauche
+            if (noeud_pere->fils_droit == noeud_a_supprimer) {
+                noeud_pere->fils_droit = NULL;
+            }
+            else {
+                noeud_pere->fils_gauche = NULL;
+            }
+            free(noeud_a_supprimer);
+            break;
+        case 1:
+            // On remplace le noeud à supprimer par son fils
+            // 1) Relier le noeud père au fils du noeud à supprimer
+            // 2) On doit pour cela libérer l'espace mémoire du noeud
+
+            // Si on doit remplacer le noeud par son fils droit
+            if (noeud_a_supprimer->fils_droit) {
+                // Si le noeud à supprimer est le fils droit
+                if (noeud_pere->fils_droit == noeud_a_supprimer) {
+                    // On remplace le fils droit du pere par le fils droit du noeud à supprimer
+                    noeud_pere->fils_droit = noeud_a_supprimer->fils_droit;
+                }
+                // Sinon, le noeud à supprimer est le fils gauche
+                else {
+                    // Sinon, on remplace le fils gauche du pere par le fils droit du noeud à supprimer
+                    noeud_pere->fils_gauche = noeud_a_supprimer->fils_droit;
+                }
+            }
+            // Sinon, on doit remplacer le noeud par son fils gauche
+            else {
+                // Si le noeud à supprimer est le fils droit
+                if (noeud_pere->fils_droit == noeud_a_supprimer) {
+                    // On remplace le fils droit du pere par le fils gauche du noeud à supprimer
+                    noeud_pere->fils_droit = noeud_a_supprimer->fils_gauche;
+                }
+                // Sinon, le noeud à supprimer est le fils gauche
+                else {
+                    // On remplace le fils gauche du pere par le fils gauche du noeud à supprimer
+                    noeud_pere->fils_gauche = noeud_a_supprimer->fils_gauche;
+                }
+            }
+
+            // On libère l'espace mémoire alloué
+            free(noeud_a_supprimer);
+            break;
+        case 2:
+            // Nombre aléatoire 0 ou 1 pour équilibrer au maximum l'ABR
+            if (rand() % 2) {
+                // 0, FAUX : on remplace par le prédecesseur (arbre gauche)
+                
+                // On récupère le noeud concerné
+                predecesseur = plus_proche_predecesseur(noeud_a_supprimer->fils_gauche);
+                
+                // On "échange" les deux noeuds en gardant intact les filsG et filsD
+                noeud_a_supprimer->id_entreprise = predecesseur->id_entreprise;
+                noeud_a_supprimer->intervalle.borne_inf = predecesseur->intervalle.borne_inf;
+                noeud_a_supprimer->intervalle.borne_sup = predecesseur->intervalle.borne_sup;
+
+                // On supprime le noeud qu'on a copié
+                suppr_noeud(ABR, predecesseur->intervalle, predecesseur->id_entreprise);
+            }
+            else {
+                // 1, VRAI : on remplace par le successeur(arbre droit)
+                successeur = plus_proche_successeur(noeud_a_supprimer->fils_droit);
+                
+                // On "échange" les deux noeuds en gardant intact les filsG et filsD
+                noeud_a_supprimer->id_entreprise = successeur->id_entreprise;
+                noeud_a_supprimer->intervalle.borne_inf = successeur->intervalle.borne_inf;
+                noeud_a_supprimer->intervalle.borne_sup = successeur->intervalle.borne_sup;
+
+                // On supprime le noeud qu'on a copié
+                suppr_noeud(ABR, successeur->intervalle, successeur->id_entreprise);
+            }
+            break;
+        default:
+            printf("Erreur, nombre de fils");
+            perror(nombre_de_fils(noeud_a_supprimer));
+            break;
+    }
 }
 
 void modif_noeud(T_Arbre ABR, T_Inter intervalle, int id_entreprise, T_Inter nouv_intervalle) {
 // Ne pas modifier ABR
-
+    T_Noeud *pnt = recherche(ABR, intervalle, id_entreprise);
+    pnt->intervalle.borne_inf = nouv_intervalle.borne_inf;
+    pnt->intervalle.borne_sup = nouv_intervalle.borne_sup;
 }
 
 void affiche_abr(T_Arbre ABR) {
 // Ne pas modifier ABR
 // Parcours Infixe GRD (croissant)
+
+    T_Noeud *pnt = ABR;
+    if(nombre_de_fils(pnt) == 0) {
+        afficher_reservation(pnt);
+    }
+    else {
+        affiche_abr(pnt->fils_gauche);
+        afficher_reservation(pnt);
+        affiche_abr(pnt->fils_droit);
+    }
 }
