@@ -1,0 +1,272 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% fphw Assignment
+% LaTeX Template
+% Version 1.0 (27/04/2019)
+%
+% This template originates from:
+% https://www.LaTeXTemplates.com
+%
+% Authors:
+% Class by Felipe Portales-Oliva (f.portales.oliva@gmail.com) with template 
+% content and modifications by Vel (vel@LaTeXTemplates.com)
+%
+% Template (this file) License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[
+	12pt, % Default font size, values between 10pt-12pt are allowed
+	%letterpaper, % Uncomment for US letter paper size
+	%spanish, % Uncomment for Spanish
+]{fphw}
+
+% Template-specific packages
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+\usepackage[french]{babel}
+\usepackage{mathpazo} % Use the Palatino font
+
+\usepackage{graphicx} % Required for including images
+\graphicspath{{images/}{../images/}}
+\usepackage{booktabs} % Required for better horizontal rules in tables
+
+\usepackage{listings} % Required for insertion of code
+
+\usepackage{enumerate} % To modify the enumerate environment
+
+\usepackage{xcolor}
+\usepackage{color}
+\definecolor{darkolivegreen}{rgb}{0.33, 0.42, 0.18}
+\definecolor{background}{RGB}{39, 40, 34}
+\definecolor{string}{RGB}{230, 219, 116}
+\definecolor{comment}{RGB}{117, 113, 94}
+\definecolor{normal}{RGB}{248, 248, 242}
+\definecolor{identifier}{RGB}{166, 226, 46}
+
+\usepackage{xparse}% to define star variant of macro
+\NewDocumentCommand{\ShowListingForLineNumber}{s O{1.0} m m m}{
+    \IfBooleanTF{#1}{\vspace{-#2\baselineskip}}{}
+    \lstinputlisting[
+            style=cstyle,
+            linerange={#3-#3},
+            firstnumber=#3,
+            caption=#4
+            ]{#5}
+} %Display specific line of a file using Listings
+
+\lstdefinestyle{cstyle}{
+		language=C, % Use Perl functions/syntax highlighting
+		numbers=left, % Line-numbers position
+		captionpos=b, % Caption position
+		breaklines=true, % Automatic breakline
+		breakatwhitespace=true, % Breaks only at whitespace
+		frame=single, % Frame around the code listing
+		numbersep=5pt,	% Distance line-number to code
+		showstringspaces=false, % Don't put marks in string spaces
+		stepnumber=2, % Step for line-numbers
+		tabsize=4, % Default tabsize
+		numberstyle=\tiny\color{black}\ttfamily ,
+		backgroundcolor=\color{background}, % Background color
+		basicstyle=\color{normal}\ttfamily , % sets font style for the code
+		identifierstyle=\color{orange},
+	    keywordstyle=\color{magenta}\ttfamily ,	% sets color for keywords
+	    stringstyle=\color{string}\ttfamily ,		% sets color for strings
+	    commentstyle=\color{comment}\ttfamily ,	% sets color for comments
+		emph={format_string, eff_ana_bf, permute, eff_ana_btr},
+		emphstyle=\color{identifier}\ttfamily ,	
+		morekeywords={BlockChain, Date}	
+		}
+
+
+%----------------------------------------------------------------------------------------
+%	ASSIGNMENT INFORMATION
+%----------------------------------------------------------------------------------------
+
+\title{Devoir 2} % Assignment title
+
+\author{Pascal Quach, Victor Mignot} % Student name
+
+\institute{Université de Technologie de Compiègne} % Institute or school name
+
+\class{Algorithmique et structures de données (NF16)} % Course or class name
+
+\date{\today} % Due date
+
+\semestre{A19}
+
+
+%\professor{Dr. Albert Einstein} % Professor or teacher in charge of the assignment
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Output the assignment title, created automatically using the information in the custom commands above
+
+%----------------------------------------------------------------------------------------
+%	ASSIGNMENT CONTENT
+%----------------------------------------------------------------------------------------
+
+%\section*{Question 1}
+%
+%\begin{problem}
+%	What is the airspeed velocity of an unladen swallow?
+%\end{problem}
+%\begin{center}
+%%	\includegraphics[width=0.5\columnwidth]{swallow.jpg} % Example image
+%\end{center}
+%
+%%------------------------------------------------
+%
+%\subsection*{Answer}
+%
+%While this question leaves out the crucial element of the geographic origin of the swallow, according to Jonathan Corum, an unladen European swallow maintains a cruising airspeed velocity of \textbf{11 metres per second}, or \textbf{24 miles an hour}. The velocity of the corresponding African swallows requires further research as kinematic data is severely lacking for these species.
+%
+%%----------------------------------------------------------------------------------------
+%
+%\section*{Question 2}
+%
+%\begin{problem}
+%	How much wood would a woodchuck chuck if a woodchuck could chuck wood?
+%	
+%	\medskip
+%	
+%	\begin{enumerate}[(\itshape a\normalfont)] % Sub-questions styled as italic letters
+%		\item Suppose ``chuck" implies throwing.
+%		\item Suppose ``chuck" implies vomiting.
+%	\end{enumerate}
+%\end{problem}
+%
+%%------------------------------------------------
+%
+%\subsection*{Answer}
+%
+%\begin{enumerate}[(\itshape a\normalfont)] % Sub-questions styled as italic letters
+%	\item According to the Associated Press (1988), a New York Fish and Wildlife technician named Richard Thomas calculated the volume of dirt in a typical 25--30 foot (7.6--9.1 m) long woodchuck burrow and had determined that if the woodchuck had moved an equivalent volume of wood, it could move ``about \textbf{700 pounds (320 kg)} on a good day, with the wind at his back".
+%    
+%	\item A woodchuck can ingest 361.92 cm\textsuperscript{3} (22.09 cu in) of wood per day. Assuming immediate expulsion on ingestion with a 5\% retainment rate, a woodchuck could chuck \textbf{343.82 cm\textsuperscript{3}} of wood per day.
+%\end{enumerate}
+%
+%%----------------------------------------------------------------------------------------
+%
+%\section*{Question 3}
+%
+%\begin{problem}
+%	Identify the author of Equation \ref{eq:bayes} below and briefly describe it in Latin.
+%	
+%	\medskip
+%	
+%	\begin{equation}\label{eq:bayes}
+%		P(A|B) = \frac{P(B|A)P(A)}{P(B)}
+%	\end{equation}
+%	
+%	\smallskip
+%\end{problem}
+%
+%%------------------------------------------------
+%
+%\subsection*{Answer} 
+%
+%Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent porttitor arcu luctus, imperdiet urna iaculis, mattis eros. Pellentesque iaculis odio vel nisl ullamcorper, nec faucibus ipsum molestie. Sed dictum nisl non aliquet porttitor. Etiam vulputate arcu dignissim, finibus sem et, viverra nisl. Aenean luctus congue massa, ut laoreet metus ornare in. Nunc fermentum nisi imperdiet lectus tincidunt vestibulum at ac elit. Nulla mattis nisl eu malesuada suscipit.
+%
+%%----------------------------------------------------------------------------------------
+%
+%\section*{Question 4 (bonus marks)}
+%
+%\begin{problem}
+%	The table below shows the nutritional consistencies of two sausage types. Explain their relative differences given what you know about daily adult nutritional recommendations.
+%	
+%	\bigskip
+%    
+%	\begin{center}
+%		\begin{tabular}{l l l}
+%			\toprule
+%			\textit{Per 50g} & Pork & Soy \\
+%			\midrule
+%			Energy & 760kJ & 538kJ\\
+%			Protein & 7.0g & 9.3g\\
+%			Carbohydrate & 0.0g & 4.9g\\
+%			Fat & 16.8g & 9.1g\\
+%			Sodium & 0.4g & 0.4g\\
+%			Fibre & 0.0g & 1.4g\\
+%			\bottomrule
+%		\end{tabular}
+%	\end{center}
+%	
+%	\medskip
+%\end{problem}
+%
+%%------------------------------------------------
+%
+%\subsection*{Answer}
+%
+%Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent porttitor arcu luctus, imperdiet urna iaculis, mattis eros. Pellentesque iaculis odio vel nisl ullamcorper, nec faucibus ipsum molestie. Sed dictum nisl non aliquet porttitor. Etiam vulputate arcu dignissim, finibus sem et, viverra nisl. Aenean luctus congue massa, ut laoreet metus ornare in. Nunc fermentum nisi imperdiet lectus tincidunt vestibulum at ac elit. Nulla mattis nisl eu malesuada suscipit.
+%
+%%----------------------------------------------------------------------------------------
+\section*{Modifications post-soutenance}
+Lors de la soutenance, un problème de duplication de bloc apparaissait après un changement de date. L'affichage des transactions était alors également touché, et il ne fonctionnait pas. Celui-ci a été corrigé, le programme fonctionne maintenant correctement.
+
+%----------------------------------------------------------------------------------------
+\section*{Fonctions et structures utiles}
+\begin{problem}
+	\lstinputlisting[
+		caption=Liste des structures et fonctions implémentées,% Caption above the listing
+		label=lst:liste, % Label for referencing this listing
+		style=cstyle
+	]{liste_fonctions_utiles.c}
+\end{problem}
+
+\begin{enumerate}
+	\item Une structure \texttt{Date} a été rajoutée pour gérer la date. La structure telle qu'elle est définie permet de passer facilement d'une date à une autre en demandant à l'utilisateur.
+	\item La fonction \texttt{afficher\_infos\_choix\_menu} est utilisée dans les sous-menus pour afficher le menu actuel et la date courante. Faire de cet affichage une fonction permet d'éviter du code redondant.
+	\item La fonction \texttt{afficher\_infos\_transaction} permet d'afficher uniformément les informations d'une transaction. Faire de cet affichage une fonction permet d'éviter du code redondant.
+	\item La fonction \texttt{free\_BlockChain} libère l'espace mémoire alloué à la BlockChain. On essaye d'éviter de surcharger le \texttt{main()}.
+	\item La fonction \texttt{init\_date} initialise la date en début de programme. On évite de surcharger le \texttt{main()} en appelant seulement la fonction.
+	\item La fonction \texttt{changement\_date} demande à l'utilisateur une nouvelle date à laquelle passer. On évite de surcharger le \texttt{main()}	\item La fonction \texttt{validation\_entree\_int} et La fonction \texttt{\_entree\_float} vérifient l'entrée de l'utilisateur selon les conditions passées en paramètre, et redemandent l'entrée jusqu'à ce qu'elle soit valide. Comme il y a beaucoup d'entrées utilisateurs, on centralise par une fonction ce code redondant.
+	\item La fonction \texttt{nombreDeBlock} compte le nombre de blocs de la BlockChain. Cette fonction permet d'initialiser l'id de chaque bloc, et de dire à l'utilisateur combien de blocs il y a.
+	\item La fonction \texttt{bc\_init} vérifie si la BlockChain a été initialisé. On centralise le code pour éviter la redondance. 
+	\item La fonction \texttt{RechercherBlock} trouve le bloc correspond à l'id passé en paramètre. On l'utilise un peu partout, cela permet de centraliser le code et d'éviter les redondances.
+\end{enumerate}
+%------------------------------------------------
+\section*{Fonctions principales}
+
+\subsection*{Modifications apportées}
+\begin{problem}
+	\ShowListingForLineNumber{57}{Fonction principale modifiée}{../tp4_abr.h}
+\end{problem}
+Le prototype a été modifiée pour prendre en compte la gestion de la date. En ajoutant le bloc, on ajoute également la date correspondante. Cela permet de centraliser le code et d'éviter de surcharger le \texttt{main()}.
+
+\subsection*{Complexité}
+\begin{enumerate}
+	\ShowListingForLineNumber{41}{Ajout d'une transaction en tête d'une liste de transactions}{../tp4_abr.h}
+	\item La complexité est constante, on ne réalise que des opérations d'affectation. 
+	\[O(1)\] 
+	\ShowListingForLineNumber{57}{Ajout d’un bloc en tête de la BlockChain}{../tp4_abr.h}
+	\item La complexité est constante, on ne réalise que des opérations d'affectation. 
+	\[O(1)\] 
+	\ShowListingForLineNumber{68}{Calcul de la somme des EATCoin crédités et dépensés par un étudiant sur une journée}{../tp4_abr.h}
+	\item Si on note $n_t$, le nombre de transactions, alors la complexité est en $O(n_t)$. En effet, on parcourt toute la liste des transactions du bloc courant pour calculer la dépense d'un étudiant en particulier. \[O(n_t)\]
+	\ShowListingForLineNumber{85}{Calcul du solde total d’un étudiant}{../tp4_abr.h}
+	\item On note $n_b$, le nombre de blocs de la BlockChain; $n_{t,i}\;, i=0,1,...,n_b$, les nombres respectifs de transactions pour un bloc d'id $i$. On parcourt toutes les listes des transactions de tous les blocs existants. La complexité évolue donc proportionnellement à la somme des $n_{t,i}$, soit au max des $n_{t,i}$.
+	\[O(n_{t,i}\]
+	\ShowListingForLineNumber{93}{Rechargement du compte d’un étudiant}{../tp4_abr.h}
+	\item \texttt{crediter} dépend de \texttt{ajouterTransaction}. La complexité est constante, car il n'y a que des opérations de comparaison et d'affectation.
+	\[O(1)\]
+	\ShowListingForLineNumber{99}{Paiement d’un repas}{../tp4_abr.h}
+	\item \texttt{payer} dépend de \texttt{ajouterTransaction}. La complexité est constante, car il n'y a que des opérations de comparaison et d'affectation.
+	\[O(1)\]
+	\ShowListingForLineNumber{108}{Historique d’un étudiant}{../tp4_abr.h}
+	\item On s'arrête au bout de 5 transactions ou moins, la complexité est donc constante. 
+	\[O(1)\]
+	\ShowListingForLineNumber{115}{Transfert de EATCoins entre deux étudiants}{../tp4_abr.h}
+	\item \texttt{transfert} dépend de \texttt{ajouterTransaction}. La complexité est constante, car il n'y a que des opérations de comparaison et d'affectation.
+\end{enumerate}
+
+%------------------------------------------------
+
+\end{document}
