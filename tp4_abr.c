@@ -338,3 +338,29 @@ void affiche_abr(T_Arbre ABR) {
         affiche_abr(pnt->fils_droit);
     }
 }
+
+void affiche_entr(T_Arbre ABR, int id_entreprise) {
+    T_Noeud *pnt = ABR;
+    // Si le pointeur est non nul
+    // Affichage des réservations en infixe (croissant)
+    if (pnt) {
+        affiche_entr(ABR->fils_gauche, id_entreprise);
+        if(pnt->id_entreprise == id_entreprise) {
+            afficher_reservation(pnt);
+        }
+        affiche_entr(ABR->fils_droit, id_entreprise);
+    }
+}
+
+void detruire_arbre (T_Arbre *ABR) {
+    T_Noeud *pnt = ABR;
+    if(pnt && nombre_de_fils(pnt) == 0) {
+        free(pnt);
+    }
+    else {
+        // Postfixe
+        detruire_arbre(pnt->fils_gauche);
+        detruire_arbre(pnt->fils_droit);
+        detruire_arbre(pnt);
+    }
+}

@@ -52,3 +52,11 @@ void modif_noeud(T_Arbre ABR, T_Inter intervalle, int id_entreprise, T_Inter nou
 
 void affiche_abr(T_Arbre ABR);
 // Ne pas modifier ABR
+
+void affiche_entr(T_Arbre ABR, int id_entreprise);
+// Afficher toutes les réservations d'une entreprise 
+// Parcours infixe (croissant)
+
+void detruire_arbre (T_Arbre *ABR);
+// Détruire un arbre
+// Parcours postfixe (GDR)
