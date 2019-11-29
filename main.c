@@ -7,7 +7,7 @@
 
 #define NOMRE_CHOIX_MENU 8
 const char* CHOIX_MENU_TEXTE[NOMRE_CHOIX_MENU] = {
-    "Créer un ABR (Arbre Binaire de Recherche)",
+    "Créer un ABR (Arbre Binaire de Recherche",
     "Afficher tous les réservations",
     "Ajouter une réservation",
     "Modifier une réservation",
