@@ -312,16 +312,37 @@ void suppr_noeud(T_Arbre *ABR, T_Inter intervalle, int id_entreprise) {
             break;
         default:
             printf("Erreur, nombre de fils");
-            perror(nombre_de_fils(noeud_a_supprimer));
+            
             break;
+    }
+
+    // On vérifie que le noeud a bien été supprimé
+    if (recherche(ABR, intervalle, id_entreprise)) {
+        printf("------------- Erreur. Le noeud n'a pas été supprimé\n");
     }
 }
 
 void modif_noeud(T_Arbre ABR, T_Inter intervalle, int id_entreprise, T_Inter nouv_intervalle) {
 // Ne pas modifier ABR
-    T_Noeud *pnt = recherche(ABR, intervalle, id_entreprise);
-    pnt->intervalle.borne_inf = nouv_intervalle.borne_inf;
-    pnt->intervalle.borne_sup = nouv_intervalle.borne_sup;
+    // Modifier de façon optimale
+    // Ajouter O(log2(n)), O(n) critique 
+    // Supprimer O(n)
+    // La fonction est optimate, car ajouter est optimisée, et supprimer également.
+    
+    // On crée le nouveau noeud, modifié
+    T_Noeud *noeud_modifie = creer_noeud(id_entreprise, intervalle);
+
+    // On vérifie qu'on puisse ajouter le nouveau noeud (erreur de chevauchement ?)
+    ajouter_noeud(ABR, noeud_modifie);
+
+    // Si le noeud a été ajouté, on supprime l'ancien noeud.
+    if (recherche(ABR, nouv_intervalle, id_entreprise)) {
+        suppr_noeud(ABR, intervalle, id_entreprise);
+    }
+    // Sinon, on affiche une erreur de chevauchement.
+    else {
+        printf("Erreur de chevauchement. On ne peut pas modifier ce noeud avec ce nouvel intervalle.");
+    }
 }
 
 void affiche_abr(T_Arbre ABR) {

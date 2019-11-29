@@ -54,7 +54,6 @@ int main() {
         switch (choix_menu) {
             case 1:
             // Créer un ABR
-
                 break;
             case 2:
             // Afficher tous les réservations
