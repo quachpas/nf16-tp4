@@ -1,3 +1,6 @@
+#include "tp4_abr.h"
+#include <stdio.h>
+#include <stdlib.h>
 /* <--------------- Définition fonctions utiles  ---------------> */
 
 void afficher_infos_choix_menu(int choix_menu, const char* CHOIX_MENU_TEXTE[]) {
@@ -5,7 +8,7 @@ void afficher_infos_choix_menu(int choix_menu, const char* CHOIX_MENU_TEXTE[]) {
     printf("\n");
 }
 
-int validation__entree_int(int cond, int inf, int sup) {
+int validation_entree_int(int cond, int inf, int sup) {
     // On initialise la valeur condition
     cond = inf -1;
     while(cond < inf || cond > sup) {
@@ -63,10 +66,9 @@ void afficher_reservation(T_Noeud* noeud) {
 }   
 
 int intervalle_chevauche(T_Noeud *noeud, T_Arbre *ABR) {
-    T_Noeud* pnt = ABR;
+    T_Noeud* pnt = *ABR;
 
     while (!pnt) {
-        
         // Des qu'on trouve un chevauchement, on renvoie vrai. 
         if (!(droite_intervalle(noeud) < cle(pnt->intervalle) || cle(noeud->intervalle) > droite_intervalle(pnt))) {
             // On cherche à savoir si deux intervales se chevauchent
@@ -150,12 +152,13 @@ T_Noeud* creer_noeud(int id_entreprise, T_Inter intervalle) {
 
     // Allocation mémoire
     T_Noeud* nouveau_noeud = malloc(sizeof(T_Noeud));
-
+    
     // On initialise les variables
     nouveau_noeud->id_entreprise = id_entreprise;
     nouveau_noeud->intervalle=intervalle;
     nouveau_noeud->fils_droit = NULL;
     nouveau_noeud->fils_gauche = NULL;
+    return nouveau_noeud;
 }
 
 void ajouter_noeud(T_Arbre* ABR, T_Noeud* noeud) { 
@@ -163,7 +166,7 @@ void ajouter_noeud(T_Arbre* ABR, T_Noeud* noeud) {
 
     // Récupérer le pointeur du premier noeud.
     T_Noeud *pnt = *ABR;
-
+    
     // On vérifie que les intervalles ne se chevauchent pas
     if (intervalle_chevauche(noeud, ABR)) {
         afficher_reservation(noeud);
@@ -226,8 +229,8 @@ void suppr_noeud(T_Arbre *ABR, T_Inter intervalle, int id_entreprise) {
 // Il faut écrire la fonction intervalle_extremum(T_Arbre ABR) qui renvoie l'intervalle le plus grand d'un sous arbre.
 
     // On initialise un pointeur sur le noeud à supprimer et son père
-    T_Noeud *noeud_pere = recherche_pere(ABR, intervalle, id_entreprise);
-    T_Noeud *noeud_a_supprimer = recherche(ABR, intervalle, id_entreprise);
+    T_Noeud *noeud_pere = recherche_pere(*ABR, intervalle, id_entreprise);
+    T_Noeud *noeud_a_supprimer = recherche(*ABR, intervalle, id_entreprise);
     T_Noeud *predecesseur, *successeur;
 
     // On compte son nombre de fils
@@ -312,7 +315,6 @@ void suppr_noeud(T_Arbre *ABR, T_Inter intervalle, int id_entreprise) {
             break;
         default:
             printf("Erreur, nombre de fils");
-            perror(nombre_de_fils(noeud_a_supprimer));
             break;
     }
 }
@@ -353,14 +355,14 @@ void affiche_entr(T_Arbre ABR, int id_entreprise) {
 }
 
 void detruire_arbre (T_Arbre *ABR) {
-    T_Noeud *pnt = ABR;
+    T_Noeud *pnt = *ABR;
     if(pnt && nombre_de_fils(pnt) == 0) {
         free(pnt);
     }
     else {
         // Postfixe
-        detruire_arbre(pnt->fils_gauche);
-        detruire_arbre(pnt->fils_droit);
-        detruire_arbre(pnt);
+        detruire_arbre(&pnt->fils_gauche);
+        detruire_arbre(&pnt->fils_droit);
+        detruire_arbre(&pnt);
     }
 }

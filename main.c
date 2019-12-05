@@ -1,9 +1,8 @@
 /* <--------------- Programme principal  ---------------> */
-
-#include <stdio.h>
-#include <stdlib.h>
 #include "tp4_abr.h"
-#include "tp4_abr.c"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 #define NOMRE_CHOIX_MENU 8
 const char* CHOIX_MENU_TEXTE[NOMRE_CHOIX_MENU] = {
@@ -25,6 +24,14 @@ int main() {
 
     // Choix menu
     int choix_menu;
+    // Arbre
+    int boolArbre = 0; //0 s'il n'y a pas d'abre créer, 1 s'il y a un arbre créer
+    T_Arbre ABR;
+    //Variables utilisateur
+    int idEntreprise;
+    char jour[3], mois[3];
+    char dateFormatee[5];
+    T_Inter intervalleReservation;
  
     /* <--------------- Programme principal utilisateur  ---------------> */
 
@@ -49,18 +56,80 @@ int main() {
         }
         
         // Entrée du choix et validation
-        choix_menu = validation__entree_int(choix_menu, 1, NOMRE_CHOIX_MENU + 1);
+        choix_menu = validation_entree_int(choix_menu, 1, NOMRE_CHOIX_MENU + 1);
 
         switch (choix_menu) {
             case 1:
             // Créer un ABR
-
+                afficher_infos_choix_menu(choix_menu, CHOIX_MENU_TEXTE);
+                if (!boolArbre) {
+                    ABR = NULL;
+                    boolArbre = 1;
+                    printf("L'arbre a ete créé.\n");
+                }
+                else{
+                    printf("Vous ne pouvez pas creer plus d'un arbre.\n");
+                }
                 break;
             case 2:
             // Afficher tous les réservations
+                afficher_infos_choix_menu(choix_menu, CHOIX_MENU_TEXTE);
+                if (boolArbre) {
+                    affiche_abr(ABR);
+                }
+                else{
+                    printf("Aucun arbre n'a été créé.\n");
+                }
                 break;
             case 3:
             // Ajouter une réservation
+                dateFormatee[0] = '\0';
+                
+                afficher_infos_choix_menu(choix_menu, CHOIX_MENU_TEXTE);
+                do {
+                    printf("Veuillez saisir l'ID de l'entreprise: \t");
+                    scanf("%d", &idEntreprise);
+                    if (idEntreprise < 0) {
+                        printf("Veuillez saisir un id d'entreprise supérieur ou égal à 0");
+                    }
+                    //Vérifie que l'utilisateur indique une bonne valeur idEntreprise
+                } while (idEntreprise <0);
+                
+                do {
+                    printf("Veuillez saisir le jour de debut de la reservation (JJ MM): \t");
+                    scanf("%s %s", jour, mois);
+                    if (atoi(jour)> 31 && atoi(jour)<0 && atoi(mois)<0 && atoi(mois)>12) {
+                        printf("Veuillez saisir une date valide.\n");
+                    }
+                    //Verification entrée Début Reservation
+                } while (atoi(jour)> 31 && atoi(jour)<0 && atoi(mois)<0 && atoi(mois)>12);
+                    
+                if (mois[0] == '0') {
+                    mois[0] = mois[1];
+                    mois[1] = '\0';
+                    //Reformatage de la date
+                }
+                strcat(dateFormatee, mois);
+                strcat(dateFormatee, jour);
+                //Assemblage de la date
+                intervalleReservation.borne_inf = atoi(dateFormatee);
+                dateFormatee[0] = '\0';
+                
+                do {
+                    printf("Veuillez saisir le jour de fin de la reservation (JJ MM): \t");
+                    scanf("%s %s", jour, mois);
+                    if (atoi(jour)> 31 && atoi(jour)<0 && atoi(mois)<0 && atoi(mois)>12) {
+                        printf("Veuillez saisir une date valide.\n");
+                    }
+                    //Validation entrée fin Reservation
+                } while (atoi(jour)> 31 && atoi(jour)<0 && atoi(mois)<0 && atoi(mois)>12);
+                //Assemblage de la date
+                strcat(dateFormatee, mois);
+                strcat(dateFormatee, jour);
+                intervalleReservation.borne_sup = atoi(dateFormatee);
+                
+                ajouter_noeud(&ABR, creer_noeud(idEntreprise, intervalleReservation));
+                printf("Le noeud a bien été créé.\n");
                 break;
             case 4:
             // Modifier une réservation
@@ -77,7 +146,7 @@ int main() {
             default:
                 break;
         }
-        return 0;
     }
+    return 0;
 
 }
