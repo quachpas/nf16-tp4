@@ -22,7 +22,7 @@ typedef T_Noeud* T_Arbre; // Pointeur vers un noeud (pointe vers la racine)
 int validation_entree_int(int cond, int inf, int sup); // Structure basique pour choix
 void afficher_infos_choix_menu(int choix_menu, const char * CHOIX_MENU_TEXTE[]); // Afficher les informations du sous-menu
 int cle(T_Inter intervalle); // Renvoie la clé d'un noeud
-void parcours(T_Inter intervalle, T_Noeud *noeud_parcours); // On renvoie FG ou FD selon l'intervalle
+T_Noeud * parcours(T_Inter intervalle, T_Noeud *noeud_parcours); // On renvoie FG ou FD selon l'intervalle
 int droite_intervalle(T_Noeud* noeud); // Renvoie borne_sup d'un intervalle d'un noeud
 int intervalle_chevauche(T_Noeud *noeud_1, T_Arbre *ABR); // On parcourt l'arbre pour vérifier qu'aucun n'intervalle ne se chevauche
 void afficher_reservation(T_Noeud *noeud); // Affichage réservation

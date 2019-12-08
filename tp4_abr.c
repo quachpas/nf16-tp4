@@ -33,16 +33,17 @@ int cle(T_Inter intervalle) { // On récupère la clé de l'intervalle
     return intervalle.borne_inf;
 }
 
-void parcours(T_Inter intervalle, T_Noeud *noeud_du_parcours) {
+T_Noeud* parcours(T_Inter intervalle, T_Noeud *noeud_du_parcours) {
 
     if (cle(intervalle) < cle(noeud_du_parcours->intervalle)) {
         // L'intervalle est "plus petit"/à gauche
-        noeud_du_parcours = noeud_du_parcours->fils_gauche;
+        return noeud_du_parcours->fils_gauche;
     }
     if (cle(intervalle) > cle(noeud_du_parcours->intervalle)) {
         // L'intervalle est "plus grand"/à droite
-        noeud_du_parcours = noeud_du_parcours->fils_droit;
+        return noeud_du_parcours->fils_droit;
     }
+    return NULL;
 }
 int droite_intervalle(T_Noeud *noeud) {
     return noeud->intervalle.borne_sup;
@@ -92,7 +93,7 @@ int intervalle_chevauche(T_Noeud *noeud, T_Arbre *ABR) {
         // On parcourt l'arbre de façon logique
         // Si pas de chevauchement au noeud actuel, on va à droite si l'intervalle est supérieure, gauche sinon.
         // Il n'y a pas de chevauchement possible à gauche si l'intervalle est supérieure.
-        parcours(noeud->intervalle, pnt);    
+        pnt = parcours(noeud->intervalle, pnt);
     }
     // Sinon, les intervalles ne se chevauchent pas
     return 0;
@@ -196,7 +197,13 @@ void ajouter_noeud(T_Arbre* ABR, T_Noeud* noeud) {
             tmp = pnt;
             
             // On passe au noeud suivant
-            parcours(noeud->intervalle, pnt);
+            if (nombre_de_fils(pnt) != 0) {
+                parcours(noeud->intervalle, pnt);
+            }
+            else{
+                pnt = NULL;
+            }
+            
         }
 
         // On ajoute le noeud après avoir vérifié où il doit se placer dans l'ABR
@@ -215,7 +222,7 @@ T_Noeud* recherche(T_Arbre ABR, T_Inter intervalle, int id_entreprise) {
 // Renvoie un pointeur vers la réservation recherchée, sinon NULL
 // Ne pas modifier ABR
     T_Noeud *pnt = ABR;
-    while(!pnt) {
+    while(pnt) {
         if (cle(intervalle) == cle(pnt->intervalle) && intervalle.borne_sup == droite_intervalle(pnt) && id_entreprise == pnt->id_entreprise) {
             // Si les bornes sont identiques, et l'id identique
             // => Bonne réservation    
@@ -226,7 +233,7 @@ T_Noeud* recherche(T_Arbre ABR, T_Inter intervalle, int id_entreprise) {
             parcours(intervalle, pnt);
         }   
     }
-    printf("Aucun noeud n'a été trouvé.");
+    printf("Aucun noeud n'a été trouvé.\n");
     return NULL;
 }
 
@@ -333,8 +340,10 @@ void suppr_noeud(T_Arbre *ABR, T_Inter intervalle, int id_entreprise) {
 void modif_noeud(T_Arbre ABR, T_Inter intervalle, int id_entreprise, T_Inter nouv_intervalle) {
 // Ne pas modifier ABR
     T_Noeud *pnt = recherche(ABR, intervalle, id_entreprise);
-    pnt->intervalle.borne_inf = nouv_intervalle.borne_inf;
-    pnt->intervalle.borne_sup = nouv_intervalle.borne_sup;
+    if (pnt) {
+        pnt->intervalle.borne_inf = nouv_intervalle.borne_inf;
+        pnt->intervalle.borne_sup = nouv_intervalle.borne_sup;
+    }
 }
 
 void affiche_abr(T_Arbre ABR) {
