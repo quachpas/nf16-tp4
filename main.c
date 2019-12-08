@@ -68,7 +68,7 @@ int main() {
                     printf("L'arbre a ete créé.\n");
                 }
                 else{
-                    printf("Vous ne pouvez pas creer plus d'un arbre.\n");
+                    printf("L'arbre a déjà été créér.\n");
                 }
                 break;
             case 2:
@@ -86,50 +86,55 @@ int main() {
                 dateFormatee[0] = '\0';
                 
                 afficher_infos_choix_menu(choix_menu, CHOIX_MENU_TEXTE);
-                do {
-                    printf("Veuillez saisir l'ID de l'entreprise: \t");
-                    scanf("%d", &idEntreprise);
-                    if (idEntreprise < 0) {
-                        printf("Veuillez saisir un id d'entreprise supérieur ou égal à 0");
-                    }
-                    //Vérifie que l'utilisateur indique une bonne valeur idEntreprise
-                } while (idEntreprise <0);
-                
-                do {
-                    printf("Veuillez saisir le jour de debut de la reservation (JJ MM): \t");
-                    scanf("%s %s", jour, mois);
-                    if (atoi(jour)> 31 && atoi(jour)<0 && atoi(mois)<0 && atoi(mois)>12) {
-                        printf("Veuillez saisir une date valide.\n");
-                    }
-                    //Verification entrée Début Reservation
-                } while (atoi(jour)> 31 && atoi(jour)<0 && atoi(mois)<0 && atoi(mois)>12);
-                    
-                if (mois[0] == '0') {
-                    mois[0] = mois[1];
-                    mois[1] = '\0';
-                    //Reformatage de la date
+                if (boolArbre) {
+                                   do {
+                         printf("Veuillez saisir l'ID de l'entreprise: \t");
+                         scanf("%d", &idEntreprise);
+                         if (idEntreprise < 0) {
+                             printf("Veuillez saisir un id d'entreprise supérieur ou égal à 0");
+                         }
+                         //Vérifie que l'utilisateur indique une bonne valeur idEntreprise
+                     } while (idEntreprise <0);
+                     
+                     do {
+                         printf("Veuillez saisir le jour de debut de la reservation (JJ MM): \t");
+                         scanf("%s %s", jour, mois);
+                         if (atoi(jour)> 31 && atoi(jour)<0 && atoi(mois)<0 && atoi(mois)>12) {
+                             printf("Veuillez saisir une date valide.\n");
+                         }
+                         //Verification entrée Début Reservation
+                     } while (atoi(jour)> 31 && atoi(jour)<0 && atoi(mois)<0 && atoi(mois)>12);
+                         
+                     if (mois[0] == '0') {
+                         mois[0] = mois[1];
+                         mois[1] = '\0';
+                         //Reformatage de la date
+                     }
+                     strcat(dateFormatee, mois);
+                     strcat(dateFormatee, jour);
+                     //Assemblage de la date
+                     intervalleReservation.borne_inf = atoi(dateFormatee);
+                     dateFormatee[0] = '\0';
+                     
+                     do {
+                         printf("Veuillez saisir le jour de fin de la reservation (JJ MM): \t");
+                         scanf("%s %s", jour, mois);
+                         if (atoi(jour)> 31 && atoi(jour)<0 && atoi(mois)<0 && atoi(mois)>12) {
+                             printf("Veuillez saisir une date valide.\n");
+                         }
+                         //Validation entrée fin Reservation
+                     } while (atoi(jour)> 31 && atoi(jour)<0 && atoi(mois)<0 && atoi(mois)>12);
+                     //Assemblage de la date
+                     strcat(dateFormatee, mois);
+                     strcat(dateFormatee, jour);
+                     intervalleReservation.borne_sup = atoi(dateFormatee);
+                     
+                     ajouter_noeud(&ABR, creer_noeud(idEntreprise, intervalleReservation));
+                     printf("Le noeud a bien été créé.\n");
                 }
-                strcat(dateFormatee, mois);
-                strcat(dateFormatee, jour);
-                //Assemblage de la date
-                intervalleReservation.borne_inf = atoi(dateFormatee);
-                dateFormatee[0] = '\0';
-                
-                do {
-                    printf("Veuillez saisir le jour de fin de la reservation (JJ MM): \t");
-                    scanf("%s %s", jour, mois);
-                    if (atoi(jour)> 31 && atoi(jour)<0 && atoi(mois)<0 && atoi(mois)>12) {
-                        printf("Veuillez saisir une date valide.\n");
-                    }
-                    //Validation entrée fin Reservation
-                } while (atoi(jour)> 31 && atoi(jour)<0 && atoi(mois)<0 && atoi(mois)>12);
-                //Assemblage de la date
-                strcat(dateFormatee, mois);
-                strcat(dateFormatee, jour);
-                intervalleReservation.borne_sup = atoi(dateFormatee);
-                
-                ajouter_noeud(&ABR, creer_noeud(idEntreprise, intervalleReservation));
-                printf("Le noeud a bien été créé.\n");
+                else{
+                    printf("L'arbre n'a pas été créé pour l'instant !\n");
+                }
                 break;
             case 4:
             // Modifier une réservation

@@ -34,6 +34,7 @@ int cle(T_Inter intervalle) { // On récupère la clé de l'intervalle
 }
 
 void parcours(T_Inter intervalle, T_Noeud *noeud_du_parcours) {
+
     if (cle(intervalle) < cle(noeud_du_parcours->intervalle)) {
         // L'intervalle est "plus petit"/à gauche
         noeud_du_parcours = noeud_du_parcours->fils_gauche;
@@ -48,7 +49,7 @@ int droite_intervalle(T_Noeud *noeud) {
 }
 
 void afficher_date(T_Inter intervalle) {
-    printf("%d",intervalle.borne_sup);
+    printf("%d\n",intervalle.borne_sup);
     if (sizeof(intervalle.borne_inf) == 3) {
         printf("/0%d",intervalle.borne_inf);
     }
@@ -58,17 +59,22 @@ void afficher_date(T_Inter intervalle) {
     
 }
 void afficher_reservation(T_Noeud* noeud) {
-    printf("<--- RESERVATION --- >\n");
-    printf("- ID Entreprise : %d\n",noeud->id_entreprise);
-    printf("- Dates : ");
-    afficher_date(noeud->intervalle);
-    printf("\n\n");
+    if (noeud) {
+        printf("<--- RESERVATION --- >\n");
+        printf("- ID Entreprise : %d\n",noeud->id_entreprise);
+        printf("- Dates : ");
+        afficher_date(noeud->intervalle);
+        printf("\n\n");
+    }
+    else{
+        printf("Il n'y a aucun noeud !\n");
+    }
 }   
 
 int intervalle_chevauche(T_Noeud *noeud, T_Arbre *ABR) {
     T_Noeud* pnt = *ABR;
 
-    while (!pnt) {
+    while (pnt) {
         // Des qu'on trouve un chevauchement, on renvoie vrai. 
         if (!(droite_intervalle(noeud) < cle(pnt->intervalle) || cle(noeud->intervalle) > droite_intervalle(pnt))) {
             // On cherche à savoir si deux intervales se chevauchent
@@ -93,10 +99,10 @@ int intervalle_chevauche(T_Noeud *noeud, T_Arbre *ABR) {
 }
 
 int nombre_de_fils(T_Noeud *noeud) {
-    if (!(noeud->fils_droit) && !(noeud->fils_gauche)) {
+    if (noeud && !(noeud->fils_droit) && !(noeud->fils_gauche)) {
         return 2;
     }
-    else if (noeud->fils_droit || noeud->fils_gauche) {
+    else if (noeud && (noeud->fils_droit || noeud->fils_gauche)) {
         return 1;
     }
     else return 0;   
@@ -163,6 +169,11 @@ T_Noeud* creer_noeud(int id_entreprise, T_Inter intervalle) {
 
 void ajouter_noeud(T_Arbre* ABR, T_Noeud* noeud) { 
     // Ne pas modifier ABR
+    if (*ABR == NULL) {
+        //Cas trivial où l'ABR est vide
+        *ABR = noeud;
+        return;
+    }
 
     // Récupérer le pointeur du premier noeud.
     T_Noeud *pnt = *ABR;
@@ -176,11 +187,11 @@ void ajouter_noeud(T_Arbre* ABR, T_Noeud* noeud) {
     // S'ils ne se chevauchent pas, on l'ajoute à l'ABR
     else {
         // Variable de Stockage
-        T_Noeud *tmp;    
+        T_Noeud *tmp;
 
         // On parcourt l'arbre si aucune incompatibilité n'apparaît
         // On s'arrête lorsqu'on arrive à une feuille
-        while (!pnt) {
+        while (pnt) {
             // On sauvegarde le prédecesseur
             tmp = pnt;
             
