@@ -75,7 +75,7 @@ void afficher_reservation(T_Noeud* noeud) {
 int intervalle_chevauche(T_Noeud *noeud, T_Arbre *ABR) {
     T_Noeud* pnt = *ABR;
 
-    while (pnt) {
+    while (nombre_de_fils(pnt) != 0) {
         // Des qu'on trouve un chevauchement, on renvoie vrai. 
         if (!(droite_intervalle(noeud) < cle(pnt->intervalle) || cle(noeud->intervalle) > droite_intervalle(pnt))) {
             // On cherche à savoir si deux intervales se chevauchent
@@ -198,7 +198,7 @@ void ajouter_noeud(T_Arbre* ABR, T_Noeud* noeud) {
             
             // On passe au noeud suivant
             if (nombre_de_fils(pnt) != 0) {
-                parcours(noeud->intervalle, pnt);
+                pnt = parcours(noeud->intervalle, pnt);
             }
             else{
                 pnt = NULL;
@@ -351,13 +351,14 @@ void affiche_abr(T_Arbre ABR) {
 // Parcours Infixe GRD (croissant)
 
     T_Noeud *pnt = ABR;
-    if(nombre_de_fils(pnt) == 0) {
+    if (pnt) {
+        if (nombre_de_fils(pnt) != 0) {
+            affiche_abr(pnt->fils_gauche);
+        }
         afficher_reservation(pnt);
-    }
-    else {
-        affiche_abr(pnt->fils_gauche);
-        afficher_reservation(pnt);
-        affiche_abr(pnt->fils_droit);
+        if (nombre_de_fils(pnt) != 0) {
+            affiche_abr(pnt->fils_droit);
+        }
     }
 }
 

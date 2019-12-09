@@ -212,6 +212,7 @@ int main() {
                     strcat(dateFormatee, jour);
                     intervalleReservation.borne_sup = atoi(dateFormatee);
                     modif_noeud(ABR, intervalleReservation, idEntreprise, nouvelIntervalle);
+                    dateFormatee[0] = '\0';
                 }
                 else {
                     printf("L'arbre n'a pas encore été créé pour l'instant.\n");
@@ -221,12 +222,53 @@ int main() {
                 break;
             case 5:
             // Supprimer une réservation
+                printf("Veuillez saisir l'id de l'entreprise\n");
+                validation_entree_int(idEntreprise, 0, 5000);
+                printf("SAISIE DE L'INTERVALLE A SUPPRIMER: \n");
+                do {
+                    printf("Veuillez saisir le jour de debut de la reservation (JJ MM): \t");
+                    scanf("%s %s", jour, mois);
+                    if (atoi(jour)> 31 && atoi(jour)<0 && atoi(mois)<0 && atoi(mois)>12) {
+                        printf("Veuillez saisir une date valide.\n");
+                    }
+                    //Verification entrée Début Reservation
+                } while (atoi(jour)> 31 && atoi(jour)<0 && atoi(mois)<0 && atoi(mois)>12);
+                
+                if (mois[0] == '0') {
+                    mois[0] = mois[1];
+                    mois[1] = '\0';
+                    //Reformatage de la date
+                }
+                strcat(dateFormatee, mois);
+                strcat(dateFormatee, jour);
+                //Assemblage de la date
+                intervalleReservation.borne_inf = atoi(dateFormatee);
+                dateFormatee[0] = '\0';
+                
+                do {
+                    printf("Veuillez saisir le jour de fin de la reservation (JJ MM): \t");
+                    scanf("%s %s", jour, mois);
+                    if (atoi(jour)> 31 && atoi(jour)<0 && atoi(mois)<0 && atoi(mois)>12) {
+                        printf("Veuillez saisir une date valide.\n");
+                    }
+                    //Validation entrée fin Reservation
+                } while (atoi(jour)> 31 && atoi(jour)<0 && atoi(mois)<0 && atoi(mois)>12);
+                //Assemblage de la date
+                strcat(dateFormatee, mois);
+                strcat(dateFormatee, jour);
+                intervalleReservation.borne_sup = atoi(dateFormatee);
+                dateFormatee[0] = '\0';
+                suppr_noeud(&ABR, intervalleReservation, idEntreprise);
                 break;
             case 6:
             // Afficher les réservations d'une entreprise
+                printf("Veuillez saisir l'ID de l'entreprise.\n");
+                validation_entree_int(idEntreprise, 0, 5000);
+                
                 break;
             case 7:
             // Supprimer l'arbre
+                detruire_arbre(&ABR);
                 break;    
             default:
                 break;
