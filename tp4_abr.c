@@ -35,11 +35,11 @@ int cle(T_Inter intervalle) { // On récupère la clé de l'intervalle
 
 T_Noeud* parcours(T_Inter intervalle, T_Noeud *noeud_du_parcours) {
 
-    if (cle(intervalle) < cle(noeud_du_parcours->intervalle)) {
+    if (noeud_du_parcours->fils_gauche && cle(intervalle) < cle(noeud_du_parcours->intervalle)) {
         // L'intervalle est "plus petit"/à gauche
         return noeud_du_parcours->fils_gauche;
     }
-    if (cle(intervalle) > cle(noeud_du_parcours->intervalle)) {
+    if (noeud_du_parcours->fils_droit && cle(intervalle) > cle(noeud_du_parcours->intervalle)) {
         // L'intervalle est "plus grand"/à droite
         return noeud_du_parcours->fils_droit;
     }
@@ -100,10 +100,10 @@ int intervalle_chevauche(T_Noeud *noeud, T_Arbre *ABR) {
 }
 
 int nombre_de_fils(T_Noeud *noeud) {
-    if (noeud && !(noeud->fils_droit) && !(noeud->fils_gauche)) {
+    if (noeud != NULL && (noeud->fils_droit != NULL) && (noeud->fils_gauche != NULL)) {
         return 2;
     }
-    else if (noeud && (noeud->fils_droit || noeud->fils_gauche)) {
+    else if (noeud != NULL && (noeud->fils_droit != NULL || noeud->fils_gauche != NULL)) {
         return 1;
     }
     else return 0;   
@@ -175,45 +175,42 @@ void ajouter_noeud(T_Arbre* ABR, T_Noeud* noeud) {
         *ABR = noeud;
         return;
     }
-
-    // Récupérer le pointeur du premier noeud.
-    T_Noeud *pnt = *ABR;
     
     // On vérifie que les intervalles ne se chevauchent pas
-    if (intervalle_chevauche(noeud, ABR)) {
+    else if (intervalle_chevauche(noeud, ABR)) {
         afficher_reservation(noeud);
         printf("Les intervalles se chevauchent.");    
     }
 
     // S'ils ne se chevauchent pas, on l'ajoute à l'ABR
     else {
+        // Récupérer le pointeur du premier noeud.
+        T_Noeud *pnt = *ABR;
+        int BoolBoucle = 1;
         // Variable de Stockage
-        T_Noeud *tmp;
 
         // On parcourt l'arbre si aucune incompatibilité n'apparaît
         // On s'arrête lorsqu'on arrive à une feuille
-        while (pnt) {
-            // On sauvegarde le prédecesseur
-            tmp = pnt;
-            
+        while (BoolBoucle && pnt != NULL) {
             // On passe au noeud suivant
-            if (nombre_de_fils(pnt) != 0) {
-                pnt = parcours(noeud->intervalle, pnt);
+            if (cle(noeud->intervalle) > cle(pnt->intervalle)) {
+                if (pnt->fils_gauche) {
+                    pnt = pnt->fils_gauche;
+                }
+                else{
+                    pnt->fils_gauche = noeud;
+                    BoolBoucle = 0;
+                }
             }
-            else{
-                pnt = NULL;
+            if (cle(noeud->intervalle) < cle(pnt->intervalle)) {
+                if (pnt->fils_droit) {
+                    pnt = pnt->fils_droit;
+                }
+                else{
+                    pnt->fils_droit = noeud;
+                    BoolBoucle = 0;
+                }
             }
-            
-        }
-
-        // On ajoute le noeud après avoir vérifié où il doit se placer dans l'ABR
-        // L'intervalle est "plus petit"/à gauche
-        if (cle(tmp->intervalle) < cle(noeud->intervalle)) {
-            tmp->fils_gauche = noeud;
-        }
-        // L'intervalle est "plus grand"/à droite
-        if (cle(tmp->intervalle) > cle(noeud->intervalle)) {
-            tmp->fils_droit = noeud;
         }
     }
 }
