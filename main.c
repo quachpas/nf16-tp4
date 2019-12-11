@@ -84,6 +84,8 @@ int main() {
             case 3:
             // Ajouter une réservation
                 dateFormatee[0] = '\0';
+                mois[0] = '\0';
+                jour[0] = '\0';
                 
                 afficher_infos_choix_menu(choix_menu, CHOIX_MENU_TEXTE);
                 if (boolArbre) {
@@ -115,6 +117,8 @@ int main() {
                     //Assemblage de la date
                     intervalleReservation.borne_inf = atoi(dateFormatee);
                     dateFormatee[0] = '\0';
+                    mois[0] = '\0';
+                    jour[0] = '\0';
                     
                     do {
                         printf("Veuillez saisir le jour de fin de la reservation (JJ MM): \t");
@@ -140,8 +144,16 @@ int main() {
             // Modifier une réservation
                 if (boolArbre) {
                     dateFormatee[0] = '\0';
-                    printf("Veuillez saisir l'ID de l'entreprise: \t");
-                    validation_entree_int(idEntreprise, 0, 5000);
+                    mois[0] = '\0';
+                    jour[0] = '\0';
+                    do {
+                        printf("Veuillez saisir l'ID de l'entreprise: \t");
+                        scanf("%d", &idEntreprise);
+                        if (idEntreprise < 0) {
+                            printf("Veuillez saisir un id d'entreprise supérieur ou égal à 0");
+                        }
+                        //Vérifie que l'utilisateur indique une bonne valeur idEntreprise
+                    } while (idEntreprise <0);
 /* -----------------------------Saisie de l'intervalle de base du noeud ------------------------------*/
                     printf("SAISIE DE L'INTERVALLE A MODIFIER: \n");
                     do {
@@ -163,6 +175,8 @@ int main() {
                     //Assemblage de la date
                     intervalleReservation.borne_inf = atoi(dateFormatee);
                     dateFormatee[0] = '\0';
+                    mois[0] = '\0';
+                    jour[0] = '\0';
                     
                     do {
                         printf("Veuillez saisir le jour de fin de la reservation (JJ MM): \t");
@@ -177,6 +191,8 @@ int main() {
                     strcat(dateFormatee, jour);
                     intervalleReservation.borne_sup = atoi(dateFormatee);
                     dateFormatee[0] = '\0';
+                    mois[0] = '\0';
+                    jour[0] = '\0';
 /* ------------------------- Saisie du nouvel interval ------------------------------------------------------------*/
                     printf("SAISIE DU NOUVEL INTERVALLE: \n");
                     do {
@@ -196,8 +212,10 @@ int main() {
                     strcat(dateFormatee, mois);
                     strcat(dateFormatee, jour);
                     //Assemblage de la date
-                    intervalleReservation.borne_inf = atoi(dateFormatee);
+                    nouvelIntervalle.borne_inf = atoi(dateFormatee);
                     dateFormatee[0] = '\0';
+                    mois[0] = '\0';
+                    jour[0] = '\0';
                     
                     do {
                         printf("Veuillez saisir le jour de fin de la reservation (JJ MM): \t");
@@ -210,9 +228,11 @@ int main() {
                     //Assemblage de la date
                     strcat(dateFormatee, mois);
                     strcat(dateFormatee, jour);
-                    intervalleReservation.borne_sup = atoi(dateFormatee);
+                    nouvelIntervalle.borne_sup = atoi(dateFormatee);
                     modif_noeud(ABR, intervalleReservation, idEntreprise, nouvelIntervalle);
                     dateFormatee[0] = '\0';
+                    mois[0] = '\0';
+                    jour[0] = '\0';
                 }
                 else {
                     printf("L'arbre n'a pas encore été créé pour l'instant.\n");
@@ -269,6 +289,7 @@ int main() {
             case 7:
             // Supprimer l'arbre
                 detruire_arbre(&ABR);
+                boolArbre = 0;
                 break;    
             default:
                 break;

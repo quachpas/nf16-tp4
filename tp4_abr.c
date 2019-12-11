@@ -136,7 +136,7 @@ T_Noeud* recherche_pere(T_Arbre ABR, T_Inter intervalle, int id_entreprise) {
 
     T_Noeud *pnt = ABR;
     T_Noeud *noeud_pere;
-    while(!pnt) {
+    while(pnt) {
         if (cle(intervalle) == cle(pnt->intervalle) && intervalle.borne_sup == droite_intervalle(pnt) && id_entreprise == pnt->id_entreprise) {
             // Si les bornes sont identiques, et l'id identique
             // => Bonne réservation    
@@ -145,7 +145,7 @@ T_Noeud* recherche_pere(T_Arbre ABR, T_Inter intervalle, int id_entreprise) {
         else {
             noeud_pere = pnt;
             // On passage au noeud suivant de façon logique
-            parcours(intervalle, pnt);
+            
         }   
     }
     printf("Aucun noeud n'a été trouvé.");
@@ -193,7 +193,7 @@ void ajouter_noeud(T_Arbre* ABR, T_Noeud* noeud) {
         // On s'arrête lorsqu'on arrive à une feuille
         while (BoolBoucle && pnt != NULL) {
             // On passe au noeud suivant
-            if (cle(noeud->intervalle) > cle(pnt->intervalle)) {
+            if (cle(noeud->intervalle) < cle(pnt->intervalle)) {
                 if (pnt->fils_gauche) {
                     pnt = pnt->fils_gauche;
                 }
@@ -202,7 +202,7 @@ void ajouter_noeud(T_Arbre* ABR, T_Noeud* noeud) {
                     BoolBoucle = 0;
                 }
             }
-            if (cle(noeud->intervalle) < cle(pnt->intervalle)) {
+            if (cle(noeud->intervalle) > cle(pnt->intervalle)) {
                 if (pnt->fils_droit) {
                     pnt = pnt->fils_droit;
                 }
@@ -220,17 +220,25 @@ T_Noeud* recherche(T_Arbre ABR, T_Inter intervalle, int id_entreprise) {
 // Ne pas modifier ABR
     T_Noeud *pnt = ABR;
     while(pnt) {
-        if (cle(intervalle) == cle(pnt->intervalle) && intervalle.borne_sup == droite_intervalle(pnt) && id_entreprise == pnt->id_entreprise) {
+        if (intervalle.borne_inf == pnt->intervalle.borne_inf && id_entreprise == pnt->id_entreprise) {
             // Si les bornes sont identiques, et l'id identique
             // => Bonne réservation    
             return pnt;
         }
         else {
             // On passage au noeud suivant de façon logique
-            parcours(intervalle, pnt);
+            if (intervalle.borne_inf > pnt->intervalle.borne_inf && pnt->fils_droit) {
+                pnt = pnt->fils_droit;
+            }
+            else if (intervalle.borne_inf < pnt->intervalle.borne_inf && pnt->fils_gauche){
+                pnt = pnt->fils_gauche;
+            }
+            else{
+                printf("Aucune réservation n'a été trouvée !\n");
+                return NULL;
+            }
         }   
     }
-    printf("Aucun noeud n'a été trouvé.\n");
     return NULL;
 }
 
@@ -338,8 +346,8 @@ void modif_noeud(T_Arbre ABR, T_Inter intervalle, int id_entreprise, T_Inter nou
 // Ne pas modifier ABR
     T_Noeud *pnt = recherche(ABR, intervalle, id_entreprise);
     if (pnt) {
-        pnt->intervalle.borne_inf = nouv_intervalle.borne_inf;
-        pnt->intervalle.borne_sup = nouv_intervalle.borne_sup;
+        suppr_noeud(&ABR, intervalle, id_entreprise);
+        ajouter_noeud(&ABR, creer_noeud(id_entreprise, nouv_intervalle));
     }
 }
 
