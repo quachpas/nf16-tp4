@@ -75,9 +75,9 @@ void afficher_reservation(T_Noeud* noeud) {
 int intervalle_chevauche(T_Noeud *noeud, T_Arbre *ABR) {
     T_Noeud* pnt = *ABR;
 
-    while (nombre_de_fils(pnt) != 0) {
+    while (pnt) {
         // Des qu'on trouve un chevauchement, on renvoie vrai. 
-        if (!(droite_intervalle(noeud) < cle(pnt->intervalle) || cle(noeud->intervalle) > droite_intervalle(pnt))) {
+        if ((noeud->intervalle.borne_sup >= pnt->intervalle.borne_inf && noeud->intervalle.borne_sup <= pnt->intervalle.borne_sup) || (noeud->intervalle.borne_inf <= pnt->intervalle.borne_sup && noeud->intervalle.borne_inf >= pnt->intervalle.borne_inf) ) {
             // On cherche à savoir si deux intervales se chevauchent
             // Si I1 est à gauche de I2, I2 à droite de I1
             // OU
@@ -137,7 +137,7 @@ T_Noeud* recherche_pere(T_Arbre ABR, T_Inter intervalle, int id_entreprise) {
     T_Noeud *pnt = ABR;
     T_Noeud *noeud_pere;
     while(pnt) {
-        if (cle(intervalle) == cle(pnt->intervalle) && intervalle.borne_sup == droite_intervalle(pnt) && id_entreprise == pnt->id_entreprise) {
+        if (intervalle.borne_inf == pnt->intervalle.borne_inf && intervalle.borne_sup == pnt->intervalle.borne_sup && id_entreprise == pnt->id_entreprise) {
             // Si les bornes sont identiques, et l'id identique
             // => Bonne réservation    
             return noeud_pere;
@@ -145,7 +145,12 @@ T_Noeud* recherche_pere(T_Arbre ABR, T_Inter intervalle, int id_entreprise) {
         else {
             noeud_pere = pnt;
             // On passage au noeud suivant de façon logique
-            
+            if (intervalle.borne_inf > pnt->intervalle.borne_inf && pnt->fils_droit) {
+                pnt = pnt->fils_droit;
+            }
+            else if (intervalle.borne_inf < pnt->intervalle.borne_inf && pnt->fils_gauche){
+                pnt = pnt->fils_gauche;
+            }
         }   
     }
     printf("Aucun noeud n'a été trouvé.");
@@ -179,7 +184,8 @@ void ajouter_noeud(T_Arbre* ABR, T_Noeud* noeud) {
     // On vérifie que les intervalles ne se chevauchent pas
     else if (intervalle_chevauche(noeud, ABR)) {
         afficher_reservation(noeud);
-        printf("Les intervalles se chevauchent.");    
+        printf("Les intervalles se chevauchent.\n");
+        return;
     }
 
     // S'ils ne se chevauchent pas, on l'ajoute à l'ABR
