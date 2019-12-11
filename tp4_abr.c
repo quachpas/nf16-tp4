@@ -50,20 +50,44 @@ int droite_intervalle(T_Noeud *noeud) {
 }
 
 void afficher_date(T_Inter intervalle) {
-    printf("%d\n",intervalle.borne_sup);
-    if (sizeof(intervalle.borne_inf) == 3) {
-        printf("/0%d",intervalle.borne_inf);
+    if (intervalle.borne_inf/1000 <1 ) {
+        if (intervalle.borne_inf % 100 < 10) {
+            printf("\tJour de Début : 0%d/0%d\n", intervalle.borne_inf% 100, intervalle.borne_inf/100);
+        }
+        else{
+            printf("\tJour de Début : %d/0%d\n", intervalle.borne_inf % 100, intervalle.borne_inf/100);
+        }
     }
-    else {
-        printf("%d", intervalle.borne_inf);
+    else{
+        if (intervalle.borne_inf % 100 < 10) {
+            printf("\tJour de Debut : 0%d/%d\n", intervalle.borne_inf% 100, intervalle.borne_inf/100);
+        }
+        else{
+            printf("\tJour de Début : %d/%d", intervalle.borne_inf % 100, intervalle.borne_inf/100);
+        }
     }
-    
+    if (intervalle.borne_sup/1000 <1 ) {
+        if (intervalle.borne_sup % 100 < 10) {
+            printf("\tJour de Fin : 0%d/0%d\n", intervalle.borne_sup% 100, intervalle.borne_sup/100);
+        }
+        else{
+            printf("\tJour de Fin : %d/0%d\n", intervalle.borne_sup% 100, intervalle.borne_sup/100);
+        }
+    }
+    else{
+        if (intervalle.borne_sup % 100 < 10) {
+            printf("\tJour de Fin : 0%d/0%d\n", intervalle.borne_sup% 100, intervalle.borne_sup/100);
+        }
+        else{
+            printf("\tJour de Fin : %d/%d", intervalle.borne_sup % 100, intervalle.borne_sup/100);
+        }
+    }
 }
 void afficher_reservation(T_Noeud* noeud) {
     if (noeud) {
         printf("<--- RESERVATION --- >\n");
         printf("- ID Entreprise : %d\n",noeud->id_entreprise);
-        printf("- Dates : ");
+        printf("- Dates : \n");
         afficher_date(noeud->intervalle);
         printf("\n\n");
     }
@@ -351,9 +375,13 @@ void suppr_noeud(T_Arbre *ABR, T_Inter intervalle, int id_entreprise) {
 void modif_noeud(T_Arbre ABR, T_Inter intervalle, int id_entreprise, T_Inter nouv_intervalle) {
 // Ne pas modifier ABR
     T_Noeud *pnt = recherche(ABR, intervalle, id_entreprise);
-    if (pnt) {
+    T_Noeud * NouveauNoeud = creer_noeud(id_entreprise, nouv_intervalle);
+    if (pnt && !intervalle_chevauche(NouveauNoeud, &ABR)) {
         suppr_noeud(&ABR, intervalle, id_entreprise);
-        ajouter_noeud(&ABR, creer_noeud(id_entreprise, nouv_intervalle));
+        ajouter_noeud(&ABR, NouveauNoeud);
+    }
+    else{
+        free(NouveauNoeud);
     }
 }
 
