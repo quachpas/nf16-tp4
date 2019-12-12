@@ -20,7 +20,7 @@ int main() {
     /* <--------------- Variables  ---------------> */
 
     // Compteur
-    int i,j;
+    int i;
 
     // Choix menu
     int choix_menu;
