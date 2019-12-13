@@ -63,7 +63,7 @@ void afficher_date(T_Inter intervalle) {
             printf("\tJour de Debut : 0%d/%d\n", intervalle.borne_inf% 100, intervalle.borne_inf/100);
         }
         else{
-            printf("\tJour de Début : %d/%d", intervalle.borne_inf % 100, intervalle.borne_inf/100);
+            printf("\tJour de Début : %d/%d\n", intervalle.borne_inf % 100, intervalle.borne_inf/100);
         }
     }
     if (intervalle.borne_sup/1000 <1 ) {
@@ -79,7 +79,7 @@ void afficher_date(T_Inter intervalle) {
             printf("\tJour de Fin : 0%d/0%d\n", intervalle.borne_sup% 100, intervalle.borne_sup/100);
         }
         else{
-            printf("\tJour de Fin : %d/%d", intervalle.borne_sup % 100, intervalle.borne_sup/100);
+            printf("\tJour de Fin : %d/%d\n", intervalle.borne_sup % 100, intervalle.borne_sup/100);
         }
     }
 }
@@ -376,12 +376,13 @@ void modif_noeud(T_Arbre ABR, T_Inter intervalle, int id_entreprise, T_Inter nou
 // Ne pas modifier ABR
     T_Noeud *pnt = recherche(ABR, intervalle, id_entreprise);
     T_Noeud * NouveauNoeud = creer_noeud(id_entreprise, nouv_intervalle);
+    suppr_noeud(&ABR, intervalle, id_entreprise);
     if (pnt && !intervalle_chevauche(NouveauNoeud, &ABR)) {
-        suppr_noeud(&ABR, intervalle, id_entreprise);
         ajouter_noeud(&ABR, NouveauNoeud);
     }
     else{
         free(NouveauNoeud);
+        ajouter_noeud(&ABR, creer_noeud(id_entreprise, intervalle));
     }
 }
 

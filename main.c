@@ -97,11 +97,11 @@ int main() {
                     do {
                         printf("Veuillez saisir le jour de debut de la reservation (JJ/MM): \t");
                         scanf("%d/%d", &jour, &mois);
-                        if (jour> 31 && jour<0 && mois<0 && mois>12) {
+                        if (jour> 31 || jour<0 || mois<0 || mois>12) {
                             printf("Veuillez saisir une date valide.\n");
                         }
                         //Verification entrée Début Reservation
-                    } while (jour> 31 && jour<0 && mois<0 && mois>12);
+                    } while (jour> 31 || jour<0 || mois<0 || mois>12);
                     
                     mois*=100;
                     //Assemblage de la date
@@ -109,11 +109,11 @@ int main() {
                     do {
                         printf("Veuillez saisir le jour de fin de la reservation (JJ/MM): \t");
                         scanf("%d/%d", &jour, &mois);
-                        if (jour> 31 && jour<0 && mois<0 && mois>12) {
+                        if (jour> 31 || jour<0 || mois<0 || mois>12) {
                             printf("Veuillez saisir une date valide.\n");
                         }
                         //Validation entrée fin Reservation
-                    } while (jour> 31 && jour<0 && mois<0 && mois>12);
+                    } while (jour> 31 || jour<0|| mois<0 || mois>12);
                     //Assemblage de la date
                     mois*=100;
                     intervalleReservation.borne_sup = mois + jour;
@@ -140,11 +140,11 @@ int main() {
                     do {
                         printf("Veuillez saisir le jour de debut de la reservation (JJ/MM): \t");
                         scanf("%d/%d", &jour, &mois);
-                        if (jour> 31 && jour<0 && mois<0 && mois>12) {
+                        if (jour> 31 || jour<0 || mois<0|| mois>12) {
                             printf("Veuillez saisir une date valide.\n");
                         }
                         //Verification entrée Début Reservation
-                    } while (jour> 31 && jour<0 && mois<0 && mois>12);
+                    } while (jour> 31 || jour<0 || mois<0 || mois>12);
                     
                     mois*=100;
                     //Assemblage de la date
@@ -153,11 +153,11 @@ int main() {
                     do {
                         printf("Veuillez saisir le jour de fin de la reservation (JJ/MM): \t");
                         scanf("%d/%d", &jour, &mois);
-                        if (jour> 31 && jour<0 && mois<0 && mois>12) {
+                        if (jour> 31 || jour<0 || mois<0 || mois>12) {
                             printf("Veuillez saisir une date valide.\n");
                         }
                         //Validation entrée fin Reservation
-                    } while (jour> 31 && jour<0 && mois<0 && mois>12);
+                    } while (jour> 31 || jour<0 || mois<0 || mois>12);
                     //Assemblage de la date
                     mois *= 100;
                     intervalleReservation.borne_sup = mois+jour;
@@ -166,11 +166,11 @@ int main() {
                     do {
                         printf("Veuillez saisir le jour de debut de la reservation (JJ/MM): \t");
                         scanf("%d/%d", &jour, &mois);
-                        if (jour> 31 && jour<0 && mois<0 && mois>12) {
+                        if (jour> 31 || jour<0 || mois<0 || mois>12) {
                             printf("Veuillez saisir une date valide.\n");
                         }
                         //Verification entrée Début Reservation
-                    } while (jour> 31 && jour<0 && mois<0 && mois>12);
+                    } while (jour> 31 || jour<0 || mois<0 || mois>12);
                     
                     mois *= 100;
                     //Assemblage de la date
@@ -179,11 +179,11 @@ int main() {
                     do {
                         printf("Veuillez saisir le jour de fin de la reservation (JJ/MM): \t");
                         scanf("%d/%d", &jour, &mois);
-                        if (jour> 31 && jour<0 && mois<0 && mois>12) {
+                        if (jour> 31 || jour<0 || mois<0 || mois>12) {
                             printf("Veuillez saisir une date valide.\n");
                         }
                         //Validation entrée fin Reservation
-                    } while (jour> 31 && jour<0 && mois<0 && mois>12);
+                    } while (jour> 31 || jour<0 || mois<0 || mois>12);
                     //Assemblage de la date
                     mois *= 100;
                     nouvelIntervalle.borne_sup = mois + jour;
@@ -210,11 +210,11 @@ int main() {
                     do {
                         printf("Veuillez saisir le jour de debut de la reservation (JJ/MM): \t");
                         scanf("%d/%d", &jour, &mois);
-                        if (jour> 31 && jour<0 && mois<0 && mois>12) {
+                        if (jour> 31 || jour<0 || mois<0 || mois>12) {
                             printf("Veuillez saisir une date valide.\n");
                         }
                         //Verification entrée Début Reservation
-                    } while (jour> 31 && jour<0 && mois<0 && mois>12);
+                    } while (jour> 31 || jour<0 || mois<0 || mois>12);
                     
                     mois *= 100;
                     //Assemblage de la date
@@ -223,11 +223,11 @@ int main() {
                     do {
                         printf("Veuillez saisir le jour de fin de la reservation (JJ/MM): \t");
                         scanf("%d/%d", &jour, &mois);
-                        if (jour> 31 && jour<0 && mois<0 && mois>12) {
+                        if (jour> 31 || jour<0 || mois<0 || mois>12) {
                             printf("Veuillez saisir une date valide.\n");
                         }
                         //Validation entrée fin Reservation
-                    } while (jour> 31 && jour<0 && mois<0 && mois>12);
+                    } while (jour> 31 || jour<0 || mois<0|| mois>12);
                     //Assemblage de la date
                     mois *= 100;
                     intervalleReservation.borne_sup = mois + jour;
