@@ -30,7 +30,7 @@ void afficher_date(T_Inter intervalle); // Affichage date "JJ/MM"
 int nombre_de_fils(T_Noeud *noeud); // Renvoie le nombre de fils d'un noeud
 T_Noeud* plus_proche_successeur(T_Arbre ABR); // Renvoie l'intervalle min de l'arbre (sous-arbre droit)
 T_Noeud* plus_proche_predecesseur(T_Arbre ABR); // Renvoie l'intervalle max de l'arbre (sous-arbre gauche)
-T_Noeud* recherche_pere(T_Arbre ABR, T_Inter intervalle, int id_entreprise); // Renvoie le père du noeud recherché
+T_Noeud* recherche_pere(T_Noeud *ABR, T_Inter intervalle, int id_entreprise); // Renvoie le père du noeud recherché
 /* <--------------- Déclaration fonctions de base---------------> */
 
 T_Noeud* creer_noeud(int id_entreprise, T_Inter intervalle);

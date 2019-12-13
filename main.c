@@ -259,12 +259,11 @@ int main() {
                 if (boolArbre){
                     detruire_arbre(ABR);
                     boolArbre = 0;
-                    free(ABR);
                 }
                 else{
                     printf("Aucun arbre a été créé.\n");
                 }
-                break;    
+                break;
             default:
                 break;
         }

@@ -101,7 +101,7 @@ int intervalle_chevauche(T_Noeud *noeud, T_Arbre *ABR) {
 
     while (pnt) {
         // Des qu'on trouve un chevauchement, on renvoie vrai. 
-        if ((noeud->intervalle.borne_sup >= pnt->intervalle.borne_inf && noeud->intervalle.borne_sup <= pnt->intervalle.borne_sup) || (noeud->intervalle.borne_inf <= pnt->intervalle.borne_sup && noeud->intervalle.borne_inf >= pnt->intervalle.borne_inf) ) {
+        if ((noeud->intervalle.borne_sup >= pnt->intervalle.borne_inf && noeud->intervalle.borne_sup <= pnt->intervalle.borne_sup) || (noeud->intervalle.borne_inf <= pnt->intervalle.borne_sup && noeud->intervalle.borne_inf >= pnt->intervalle.borne_inf) || (noeud->intervalle.borne_inf <= pnt->intervalle.borne_inf && noeud->intervalle.borne_sup >= pnt->intervalle.borne_sup)) {
             // On cherche à savoir si deux intervales se chevauchent
             // Si I1 est à gauche de I2, I2 à droite de I1
             // OU
@@ -154,12 +154,13 @@ T_Noeud* plus_proche_predecesseur(T_Arbre ABR) {
     return tmp;
 }
 
-T_Noeud* recherche_pere(T_Arbre ABR, T_Inter intervalle, int id_entreprise) {
+T_Noeud* recherche_pere(T_Noeud *ABR, T_Inter intervalle, int id_entreprise) {
 // Renvoie un pointeur vers le noeud père du noeud cherché, sinon NULL
 // Ne pas modifier ABR
 
     T_Noeud *pnt = ABR;
-    T_Noeud *noeud_pere;
+    
+    T_Noeud *noeud_pere = NULL;
     while(pnt) {
         if (intervalle.borne_inf == pnt->intervalle.borne_inf && intervalle.borne_sup == pnt->intervalle.borne_sup && id_entreprise == pnt->id_entreprise) {
             // Si les bornes sont identiques, et l'id identique
@@ -285,10 +286,12 @@ void suppr_noeud(T_Arbre *ABR, T_Inter intervalle, int id_entreprise) {
     T_Noeud *noeud_pere = recherche_pere(*ABR, intervalle, id_entreprise);
     T_Noeud *noeud_a_supprimer = recherche(*ABR, intervalle, id_entreprise);
     T_Noeud *predecesseur, *successeur;
-
+    
     // On compte son nombre de fils
     int nombre_fils = nombre_de_fils(noeud_a_supprimer);
-
+    if (noeud_pere == NULL) {
+        noeud_pere = *ABR;
+    }
     switch (nombre_fils) {
         case 0:
             // S'il n'a pas de fils, on le supprime.
@@ -346,12 +349,13 @@ void suppr_noeud(T_Arbre *ABR, T_Inter intervalle, int id_entreprise) {
                 predecesseur = plus_proche_predecesseur(noeud_a_supprimer->fils_gauche);
                 
                 // On "échange" les deux noeuds en gardant intact les filsG et filsD
-                noeud_a_supprimer->id_entreprise = predecesseur->id_entreprise;
-                noeud_a_supprimer->intervalle.borne_inf = predecesseur->intervalle.borne_inf;
-                noeud_a_supprimer->intervalle.borne_sup = predecesseur->intervalle.borne_sup;
+                
+                    noeud_a_supprimer->id_entreprise = predecesseur->id_entreprise;
+                    noeud_a_supprimer->intervalle.borne_inf = predecesseur->intervalle.borne_inf;
+                    noeud_a_supprimer->intervalle.borne_sup = predecesseur->intervalle.borne_sup;
 
-                // On supprime le noeud qu'on a copié
-                suppr_noeud(ABR, predecesseur->intervalle, predecesseur->id_entreprise);
+                    // On supprime le noeud qu'on a copié
+                    suppr_noeud(ABR, predecesseur->intervalle, predecesseur->id_entreprise);
             }
             else {
                 // 1, VRAI : on remplace par le successeur(arbre droit)
@@ -417,7 +421,10 @@ void affiche_entr(T_Arbre ABR, int id_entreprise) {
 
 void detruire_arbre (T_Arbre *ABR) {
     T_Noeud *pnt = *ABR;
-    if(pnt && nombre_de_fils(pnt) == 0) {
+    if (pnt == NULL) {
+        free(ABR);
+    }
+    else if (nombre_de_fils(pnt) == 0) {
         free(pnt);
     }
     else {
