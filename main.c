@@ -26,7 +26,7 @@ int main() {
     int choix_menu;
     // Arbre
     int boolArbre = 0; //0 s'il n'y a pas d'abre créer, 1 s'il y a un arbre créer
-    T_Arbre * ABR;
+    T_Arbre ABR;
     //Variables utilisateur
     int idEntreprise;
     int mois, jour;
@@ -62,7 +62,7 @@ int main() {
             // Créer un ABR
                 afficher_infos_choix_menu(choix_menu, CHOIX_MENU_TEXTE);
                 if (!boolArbre) {
-                    ABR = malloc(sizeof(T_Arbre));
+                    ABR = NULL;
                     boolArbre = 1;
                     printf("L'arbre a ete créé.\n");
                 }
@@ -74,7 +74,7 @@ int main() {
             // Afficher tous les réservations
                 afficher_infos_choix_menu(choix_menu, CHOIX_MENU_TEXTE);
                 if (boolArbre) {
-                    affiche_abr(*ABR);
+                    affiche_abr(ABR);
                 }
                 else{
                     printf("Aucun arbre n'a été créé.\n");
@@ -117,7 +117,7 @@ int main() {
                     //Assemblage de la date
                     mois*=100;
                     intervalleReservation.borne_sup = mois + jour;
-                    ajouter_noeud(ABR, creer_noeud(idEntreprise, intervalleReservation));
+                    ajouter_noeud(&ABR, creer_noeud(idEntreprise, intervalleReservation));
                     printf("Le noeud a bien été créé.\n");
                 }
                 else{
@@ -187,7 +187,7 @@ int main() {
                     //Assemblage de la date
                     mois *= 100;
                     nouvelIntervalle.borne_sup = mois + jour;
-                    modif_noeud(*ABR, intervalleReservation, idEntreprise, nouvelIntervalle);
+                    modif_noeud(ABR, intervalleReservation, idEntreprise, nouvelIntervalle);
                 }
                 else {
                     printf("L'arbre n'a pas encore été créé pour l'instant.\n");
@@ -231,7 +231,7 @@ int main() {
                     //Assemblage de la date
                     mois *= 100;
                     intervalleReservation.borne_sup = mois + jour;
-                    suppr_noeud(ABR, intervalleReservation, idEntreprise);
+                    suppr_noeud(&ABR, intervalleReservation, idEntreprise);
                 }
                 else{
                     printf("L'arbre n'a pas été créé.\n");
@@ -248,7 +248,7 @@ int main() {
                         }
                         //Vérifie que l'utilisateur indique une bonne valeur idEntreprise
                     } while (idEntreprise <0);
-                    affiche_entr(*ABR, idEntreprise);
+                    affiche_entr(ABR, idEntreprise);
                 }
                 else{
                     printf("Aucun arbre a été créé.\n");
@@ -257,7 +257,7 @@ int main() {
             case 7:
             // Supprimer l'arbre
                 if (boolArbre){
-                    detruire_arbre(ABR);
+                    detruire_arbre(&ABR);
                     boolArbre = 0;
                 }
                 else{

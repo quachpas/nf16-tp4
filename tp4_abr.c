@@ -133,21 +133,21 @@ int nombre_de_fils(T_Noeud *noeud) {
     else return 0;   
 }
 
-T_Noeud* plus_proche_successeur(T_Arbre ABR) {
+T_Noeud* plus_proche_successeur(T_Noeud *ABR) {
     // Renvoie l'intervalle min de l'arbre (sous-arbre droit)
     T_Noeud *pnt = ABR;
     T_Noeud *tmp;
-    while (!pnt) {
+    while (pnt) {
         tmp = pnt;
         pnt = pnt->fils_gauche;
     };
     return tmp;
 }
-T_Noeud* plus_proche_predecesseur(T_Arbre ABR) {
+T_Noeud* plus_proche_predecesseur(T_Noeud *ABR) {
     // Renvoie l'intervalle max de l'arbre (sous-arbre gauche)
     T_Noeud *pnt = ABR;
     T_Noeud *tmp;
-    while (!pnt) {
+    while (pnt) {
         tmp = pnt;
         pnt = pnt->fils_droit;
     };
@@ -251,7 +251,7 @@ T_Noeud* recherche(T_Arbre ABR, T_Inter intervalle, int id_entreprise) {
 // Ne pas modifier ABR
     T_Noeud *pnt = ABR;
     while(pnt) {
-        if (intervalle.borne_inf == pnt->intervalle.borne_inf && id_entreprise == pnt->id_entreprise) {
+        if (intervalle.borne_inf == pnt->intervalle.borne_inf && intervalle.borne_sup == pnt->intervalle.borne_sup && id_entreprise == pnt->id_entreprise) {
             // Si les bornes sont identiques, et l'id identique
             // => Bonne réservation    
             return pnt;
