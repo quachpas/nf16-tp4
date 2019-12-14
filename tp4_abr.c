@@ -1,4 +1,4 @@
-#include "tp4_abr.h"
+//#include "tp4_abr.h"
 #include <stdio.h>
 #include <stdlib.h>
 /* <--------------- Définition fonctions utiles  ---------------> */
@@ -381,12 +381,18 @@ void modif_noeud(T_Arbre ABR, T_Inter intervalle, int id_entreprise, T_Inter nou
     T_Noeud *pnt = recherche(ABR, intervalle, id_entreprise);
     T_Noeud * NouveauNoeud = creer_noeud(id_entreprise, nouv_intervalle);
     suppr_noeud(&ABR, intervalle, id_entreprise);
-    if (pnt && !intervalle_chevauche(NouveauNoeud, &ABR)) {
-        ajouter_noeud(&ABR, NouveauNoeud);
+    if (ABR->intervalle.borne_inf < 101 || ABR->intervalle.borne_inf > 1231 || ABR->intervalle.borne_sup< 101 || ABR->intervalle.borne_sup > 1231) {
+        // On va remplacer la racine, on vient de la surpprimer.
+        ABR = creer_noeud(id_entreprise, nouv_intervalle);
     }
-    else{
-        free(NouveauNoeud);
-        ajouter_noeud(&ABR, creer_noeud(id_entreprise, intervalle));
+    else {
+        if (pnt && !intervalle_chevauche(NouveauNoeud, &ABR)) {
+            ajouter_noeud(&ABR, NouveauNoeud);
+        }
+        else{
+            free(NouveauNoeud);
+            ajouter_noeud(&ABR, creer_noeud(id_entreprise, intervalle));
+        }
     }
 }
 
@@ -421,16 +427,20 @@ void affiche_entr(T_Arbre ABR, int id_entreprise) {
 
 void detruire_arbre (T_Arbre *ABR) {
     T_Noeud *pnt = *ABR;
-    if (pnt == NULL) {
-        free(ABR);
-    }
-    else if (nombre_de_fils(pnt) == 0) {
-        free(pnt);
-    }
-    else {
-        // Postfixe
-        detruire_arbre(&pnt->fils_gauche);
-        detruire_arbre(&pnt->fils_droit);
-        detruire_arbre(&pnt);
+    if (pnt) {
+        if (!(pnt->intervalle.borne_inf < 101 || pnt->intervalle.borne_inf > 1231 || pnt->intervalle.borne_sup< 101 || pnt->intervalle.borne_sup > 1231)) {
+            if (pnt == NULL) {
+                free(ABR);
+            }
+            else if (nombre_de_fils(pnt) == 0) {
+                free(pnt);
+            }
+            else {
+                // Postfixe
+                detruire_arbre(&pnt->fils_gauche);
+                detruire_arbre(&pnt->fils_droit);
+                detruire_arbre(&pnt);
+            }
+        }
     }
 }
